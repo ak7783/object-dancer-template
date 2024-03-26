@@ -9,8 +9,7 @@
   4. start coding your dancer inside the class that has been prepared for you.
   5. have fun.
 */
-
-let dancer;
+let cat;
 
 function setup() {
   // no adjustments in the setup function needed...
@@ -18,7 +17,7 @@ function setup() {
   canvas.parent("p5-canvas-container");
 
   // ...except to adjust the dancer's name on the next line:
-  dancer = new YourNameDancer(width / 2, height / 2);
+  cat = new DancingCat(width / 2, height / 2);
 }
 
 function draw() {
@@ -26,78 +25,160 @@ function draw() {
   background(0);
   drawFloor(); // for reference only
 
-  dancer.update();
-  dancer.display();
+  cat.update();
+  cat.display();
 }
 
 // You only code inside this class.
 // Start by giving the dancer your name, e.g. LeonDancer.
-class YourNameDancer {
+class DancingCat {
   constructor(startX, startY) {
-    this.x = startX;
-    this.y = startY;
-    // add properties for your dancer here:
-    //..
-    //..
-    //..
+    this.catX = startX;
+    this.catY = startY;
+    this.legAngle = 0;
+    this.legAngle2 = 0;
+    this.direction = 5;
+    this.distance = 1;
   }
+
   update() {
-    // update properties here to achieve
-    // your dancer's desired moves and behaviour
+    this.catX += this.direction;
+    this.catY = height /2 + this.distance  * 4*sin(frameCount * 0.8);
+
+    if (this.catX >= 0.75*width || this.catX <= 0.25*width) {
+      this.direction *= -1;
+    }
+
+    this.legAngle = sin(frameCount * 0.1) * 50;
+    this.legAngle2 = cos(frameCount * 0.1) * 30;
   }
+
   display() {
-    // the push and pop, along with the translate 
-    // places your whole dancer object at this.x and this.y.
-    // you may change its position on line 19 to see the effect.
     push();
-    translate(this.x, this.y);
 
-    // ******** //
-    // ⬇️ draw your dancer from here ⬇️
+    // left ear
+    fill("orange");
+    triangle(
+      this.catX - 40,
+      this.catY - 10,
+      this.catX - 20,
+      this.catY - 70,
+     this.catX,
+      this.catY - 20
+    );
+    fill("#FFCFD2");
+    triangle(
+      this.catX - 35,
+      this.catY + 10,
+      this.catX - 20,
+      this.catY - 50,
+      this.catX,
+      this.catY - 20
+    );
 
+    // right ear
+    fill("orange");
+    triangle(
+      this.catX + 40,
+      this.catY,
+      this.catX + 20,
+      this.catY - 70,
+      this.catX,
+      this.catY - 20
+    );
 
+    fill("#FFCFD2");
+    triangle(
+      this.catX + 35,
+      this.catY - 10,
+      this.catX + 20,
+      this.catY - 50,
+      this.catX,
+      this.catY + 20
+    );
 
-
-
-
-    // ⬆️ draw your dancer above ⬆️
-    // ******** //
-
-    // the next function draws a SQUARE and CROSS
-    // to indicate the approximate size and the center point
-    // of your dancer.
-    // it is using "this" because this function, too, 
-    // is a part if your Dancer object.
-    // comment it out or delete it eventually.
-    this.drawReferenceShapes()
-
+    //back legs
+    fill("orange");
+    push();
+    translate(this.catX + 80, this.catY + 50);
+    rotate(radians(this.legAngle2)); // rotate leg
+    rect(0, 0, 10, 60); // middle right leg
+    fill("pink");
+    ellipse(-3, 60, 25,10);
     pop();
-  }
-  drawReferenceShapes() {
-    noFill();
-    stroke(255, 0, 0);
-    line(-5, 0, 5, 0);
-    line(0, -5, 0, 5);
-    stroke(255);
-    rect(-100, -100, 200, 200);
+
+    fill("orange");
+    push();
+    translate(this.catX + 110, this.catY + 40);
+    rotate(radians(-this.legAngle)); // rotate leg
+    rect(0, 0, 10, 60); 
+    fill("pink");
+    ellipse(-3, 60, 25,10);
+    pop();
+
+    //front legs
+    fill("orange");
+    push();
+    translate(this.catX + 5, this.catY + 50);
+    rotate(radians(this.legAngle2)); // rotate leg
+    rect(0, -10, 10, 70); // Left leg
+    fill("pink");
+    ellipse(-3, 60, 25,10);
+    pop();
+
+    push();
+    translate(this.catX + 25, this.catY + 50);
+    rotate(radians(-this.legAngle)); //rotate leg
+    rect(0, -10, 10, 70); // middle left leg
+   fill("pink");
+     ellipse(-3, 60, 25,10);
+    pop();
+
+    push();
+    translate(this.catX, this.catY);
+    rotate(radians(-this.slegAngle2));
+    pop();
+
+    // cat body
+    fill("orange");
+    ellipse(this.catX + 60, this.catY + 20, 150, 80);
+
+    fill("orange");
+    ellipse(this.catX + 130, 0.85*this.catY + 50, 20, 20); //tail
+
+    //cat head
+    fill("orange");
+    ellipse(this.catX, this.catY, 80,75);
+    
+
+    //nose
+    fill("black");
+    ellipse(this.catX, this.catY + 10, 12, 7);
+    
+
+    //mouth
+    push(); 
+    noFill(); 
+    strokeWeight(2);
+    stroke ("red");
+    //fill("red");
+    arc(this.catX, this.catY + 20, 10, 5, 0,PI);
+    pop(); 
+
+    // eyes
     fill(255);
-    stroke(0);
+    ellipse(this.catX - 20, this.catY, 30, 30); // Left eye
+    ellipse(this.catX + 20, this.catY, 30, 30); // Right eye
+
+    //pupils
+    fill(0);
+    ellipse(this.catX - 20, this.catY+2, 20, 20); // Left eye
+    ellipse(this.catX + 20, this.catY+2, 20, 20); // Right eye
+
+    fill(255);
+    ellipse(this.catX - 20, this.catY+8, 5, 5); // Left eye
+    ellipse(this.catX + 20, this.catY + 8, 5, 5); // Right eye
+
+  
   }
 }
-
-
-
-/*
-GOAL:
-The goal is for you to write a class that produces a dancing being/creature/object/thing. In the next class, your dancer along with your peers' dancers will all dance in the same sketch that your instructor will put together. 
-
-RULES:
-For this to work you need to follow one rule: 
-  - Only put relevant code into your dancer class; your dancer cannot depend on code outside of itself (like global variables or functions defined outside)
-  - Your dancer must perform by means of the two essential methods: update and display. Don't add more methods that require to be called from outside (e.g. in the draw loop).
-  - Your dancer will always be initialized receiving two arguments: 
-    - startX (currently the horizontal center of the canvas)
-    - startY (currently the vertical center of the canvas)
-  beside these, please don't add more parameters into the constructor function 
-  - lastly, to make sure our dancers will harmonize once on the same canvas, please don't make your dancer bigger than 200x200 pixels. 
-*/
